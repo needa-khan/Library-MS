@@ -1,4 +1,6 @@
 "use client"
+export const dynamic = "force-dynamic";
+
 import { useState } from "react"
 import { addWeeks, format } from "date-fns" // Helper library for dates
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"

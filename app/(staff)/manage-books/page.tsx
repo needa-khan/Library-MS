@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { prisma } from "@/lib/prisma"
 import { BookSearch } from "@/components/staff/BookSearch"
 import { AddBookModal } from "@/components/staff/AddBookModel"
@@ -15,7 +17,7 @@ export default async function ManageBooksPage() {
           <h2 className="text-3xl font-bold tracking-tight">Manage Inventory</h2>
           <p className="text-muted-foreground">Add, update, or remove books.</p>
         </div>
-        <AddBookModal /> 
+        <AddBookModal />
       </div>
 
       {/* 2. Pass the 'books' from the database to your Search component */}
