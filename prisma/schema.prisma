@@ -1,0 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+// 1. User Model (Matches Supabase Auth)
+model User {
+  id        String   @id // This will be the Supabase UUID
+  email     String   @unique
+  name      String?
+  role      Role     @default(MEMBER)
+  createdAt DateTime @default(now())
+  studentId String?  @unique // <--- Add this line
+  issues    Issue[]
+}
+
+enum Role {
+  MEMBER
+  STAFF
+  ADMIN
+}
+
+// 2. Book Model
+model Book {
+  id          String   @id @default(cuid())
+  title       String
+  author      String
+  isbn        String   @unique
+  category    String
+  totalStock  Int      @default(1)
+  available   Int      @default(1)
+  issues      Issue[]
+}
+
+// 3. Issue/Borrowing Model
+model Issue {
+  id          String    @id @default(cuid())
+  isbn        String    // Linked to Book.isbn
+  studentId   String    // Linked to User.studentId
+  issueDate   DateTime  @default(now())
+  dueDate     DateTime
+  returnDate  DateTime?
+  finePaid    Float     @default(0)
+  
+  // Define the relations so 'include: { book: true }' works!
+  book        Book      @relation(fields: [isbn], references: [isbn])
+  user        User      @relation(fields: [studentId], references: [studentId])
+}
