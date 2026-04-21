@@ -6,7 +6,7 @@ import { differenceInCalendarDays, isAfter } from "date-fns";
  */
 export const calculateFine = (dueDate: Date): { fine: number; daysOverdue: number } => {
   const today = new Date();
-  
+
   // If today is not after the due date, fine is 0
   if (!isAfter(today, dueDate)) {
     return { fine: 0, daysOverdue: 0 };

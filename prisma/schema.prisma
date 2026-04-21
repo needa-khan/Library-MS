@@ -19,7 +19,7 @@ model User {
   name      String?
   role      Role     @default(MEMBER)
   createdAt DateTime @default(now())
-  studentId String?  @unique // <--- Add this line
+  studentId String?  @unique 
   issues    Issue[]
 }
 

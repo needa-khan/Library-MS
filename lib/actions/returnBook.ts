@@ -3,6 +3,7 @@
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { differenceInDays, isPast } from 'date-fns'
+import { calculateFine } from '@/lib/utils/library-logic'
 
 export async function returnBook(formData: FormData) {
     const isbn = formData.get('isbn') as string
@@ -26,13 +27,8 @@ export async function returnBook(formData: FormData) {
             throw new Error("No active issuance found for this student and book.")
         }
 
-        // 2. Calculate the Fine (Matching your dashboard logic of ₹5/day)
-        let fineAmount = 0
-        const FINE_PER_DAY = 5
-        if (isPast(issue.dueDate)) {
-            const daysOverdue = Math.max(0, differenceInDays(new Date(), issue.dueDate))
-            fineAmount = daysOverdue * FINE_PER_DAY
-        }
+        // 2. Calculate the Fine using centralized logic
+        const { fine: fineAmount } = calculateFine(issue.dueDate)
 
         // 3. The Atomic Transaction
         await prisma.$transaction([
